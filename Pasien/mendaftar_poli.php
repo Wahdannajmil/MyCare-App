@@ -28,15 +28,21 @@
     <h1 style="text-align:center; padding-bottom:10px">Profile Pasien</h1>
     <div class="card">
         <?php
+        // Koneksi ke database
         $mysqli = new mysqli("localhost", "root", "", "poli");
+
+        // Cek koneksi
         if ($mysqli->connect_error) {
             die("Koneksi database gagal: " . $mysqli->connect_error);
         }
-        $query = "SELECT * FROM pasien LIMIT 1";
+
+        // Query untuk mengambil data pasien dari tabel
+        $query = "SELECT * FROM pasien LIMIT 1"; // Ubah sesuai dengan kebutuhan Anda
 
         $result = $mysqli->query($query);
 
         if ($result->num_rows > 0) {
+            // Ambil data dari hasil query
             $row = $result->fetch_assoc();
             ?>
             <h1><?php echo $row['nama_pasien']; ?></h1>
@@ -49,7 +55,7 @@
             echo "Data pasien tidak ditemukan";
         }
 
-        $mysqli->close();
+        $mysqli->close(); // Tutup koneksi ke database
         ?>
         <button class="btn btn-dark" onclick="window.location.href='index.php'">Kembali</button>
     </div>

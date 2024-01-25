@@ -113,14 +113,14 @@ if (isset($_GET['nama_dokter'])) {
         
         <?php
         if (isset($_SESSION['nama_pasien'])) {
-            ?>
+        ?>
             <div class="mycare-dropdown">
                 <a href="../index.php"><i class="fas fa-bars"></i> Menu</a>
                 <div class="mycare-dropdown-content">
                     <a href="daftar_poli.php?page=dokter"><i class="fas fa-user-md"></i> Mendaftar ke Poli</a>
                 </div>
             </div>
-            <?php
+        <?php
         }
         ?>
         <?php
@@ -142,81 +142,57 @@ if (isset($_GET['nama_dokter'])) {
         <div class="container mt-5">
             <h2>Daftar Poli Poliklinik</h2>
 
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th scope="col">No.</th>
-                        <th scope="col">Nama Dokter</th>
-                        <th scope="col">Hari</th>
-                        <th scope="col">Jam Mulai</th>
-                        <th scope="col">Jam Selesai</th>
-                        <th scope="col">Daftar</th>
-                    </tr>
-                </thead>
-                <tbody>
-                            <?php
-                            $mysqli = new mysqli("localhost", "root", "", "poli");
-                            if ($mysqli->connect_error) {
-                                die("Koneksi database gagal: " . $mysqli->connect_error);
-                            }
-                            $query = "SELECT * FROM pasien LIMIT 1";
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">No.</th>
+                    <th scope="col">Nama Dokter</th>
+                    <th scope="col">Hari</th>
+                    <th scope="col">Jam Mulai</th>
+                    <th scope="col">Jam Selesai</th>
+                    <th scope="col">Daftar</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                $mysqli = new mysqli("localhost", "root", "", "poli"); // Ganti dengan informasi koneksi database yang benar
+                
+                if ($mysqli->connect_error) {
+                    die("Koneksi database gagal: " . $mysqli->connect_error);
+                }
 
-                            $result = $mysqli->query($query);
+                $query = "SELECT jp.*, d.nama_dokter
+                FROM jadwal_periksa jp
+                INNER JOIN dokter d ON jp.id_dokter = d.id"; 
 
-                            if ($result->num_rows > 0) {
-                                $row = $result->fetch_assoc();
-                                ?>
-                                <h1><?php echo $row['nama_pasien']; ?></h1>
-                                <p class="title">Nomor Rekam Medis: <?php echo $row['no_rm']; ?></p>
-                                <p>Alamat: <?php echo $row['alamat']; ?></p>
-                                <p>No. KTP: <?php echo $row['no_ktp']; ?></p>
-                                <p>No. HP: <?php echo $row['no_hp']; ?></p>
-                            <?php
-                            } else {
-                                echo "Data pasien tidak ditemukan";
-                            }
+                $stmt = $mysqli->prepare($query);
+                $stmt->execute();
+                $result = $stmt->get_result();
 
-                            $mysqli->close();
-                            ?>
-                    <?php
-                    $mysqli = new mysqli("localhost", "root", "", "poli"); // Ganti dengan informasi koneksi database yang benar
-                    
-                    if ($mysqli->connect_error) {
-                        die("Koneksi database gagal: " . $mysqli->connect_error);
+                if ($result->num_rows > 0) {
+                    $count = 1;
+                    while ($row = $result->fetch_assoc()) {
+                        echo "<tr>";
+                        echo "<td>" . $count . "</td>";
+                        echo "<td>" . htmlspecialchars($row['nama_dokter']) . "</td>";
+                        echo "<td>" . htmlspecialchars($row['hari']) . "</td>";
+                        echo "<td>" . htmlspecialchars($row['jam_mulai']) . "</td>";
+                        echo "<td>" . htmlspecialchars($row['jam_selesai']) . "</td>";
+                
+                        // Tautan Daftar dengan parameter id
+                        echo "<td><a href='proses_form_keluhan.php?id_jadwal=" . $row['id'] . "&id_pasien=" . (isset($_SESSION['id_pasien']) ? $_SESSION['id_pasien'] : '') . "' class='btn btn-primary'>Daftar</a></td>";
+                        echo "</tr>";
+                        $count++;
                     }
+                } else {
+                    echo "<tr><td colspan='6'>Tidak ada jadwal periksa</td></tr>";
+                }
 
-                    $query = "SELECT jp.*, d.nama_dokter
-                              FROM jadwal_periksa jp
-                              INNER JOIN dokter d ON jp.id_dokter = d.id";
-
-                    $stmt = $mysqli->prepare($query);
-                    $stmt->execute();
-                    $result = $stmt->get_result();
-
-                    if ($result->num_rows > 0) {
-                        $count = 1;
-                        while ($row = $result->fetch_assoc()) {
-                            echo "<tr>";
-                            echo "<td>" . $count . "</td>";
-                            echo "<td>" . htmlspecialchars($row['nama_dokter']) . "</td>";
-                            echo "<td>" . htmlspecialchars($row['hari']) . "</td>";
-                            echo "<td>" . htmlspecialchars($row['jam_mulai']) . "</td>";
-                            echo "<td>" . htmlspecialchars($row['jam_selesai']) . "</td>";
-                    
-                            // Tautan Daftar dengan parameter id
-                            echo "<td><a href='proses_form_keluhan.php?id_jadwal=" . $row['id'] . "&id_pasien=" . (isset($_SESSION['id_pasien']) ? $_SESSION['id_pasien'] : '') . "' class='btn btn-primary'>Daftar</a></td>";
-                            echo "</tr>";
-                            $count++;
-                        }
-                    } else {
-                        echo "<tr><td colspan='6'>Tidak ada jadwal periksa</td></tr>";
-                    }
-
-                    $stmt->close();
-                    $mysqli->close();
-                    ?>
-                </tbody>
-            </table>
+                $stmt->close();
+                $mysqli->close();
+                ?>
+            </tbody>
+        </table>
         </div>
     </div>
 
@@ -227,3 +203,4 @@ if (isset($_GET['nama_dokter'])) {
 </body>
 
 </html>
+                

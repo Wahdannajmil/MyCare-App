@@ -25,7 +25,6 @@ if (isset($_SESSION['nip']) && isset($koneksi)) {
     <title>Daftar Poli Poliklinik</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-
         .mycare-sidebar {
             height: 100vh;
             position: fixed;
@@ -33,7 +32,7 @@ if (isset($_SESSION['nip']) && isset($koneksi)) {
             left: 0;
             width: 250px;
             padding-top: 15px;
-            background-color: #4267b2; 
+            background-color: #0171f9;
             color: #fff;
             transition: all 0.3s;
             z-index: 1;
@@ -52,19 +51,19 @@ if (isset($_SESSION['nip']) && isset($koneksi)) {
 
         .mycare-sidebar a:hover {
             padding-left: 20px;
-            background-color: #3a5795;
+            background-color: #0c8ff7;
         }
 
         .mycare-sidebar .navbar-brand {
             font-size: 1.8rem;
             color: #fff;
             font-weight: bold;
-            margin-bottom: 20px; 
+            margin-bottom: 20px;
         }
 
         .mycare-dropdown-content {
             display: none;
-            background-color: #3a5795; 
+            background-color: #3a5795;
             min-width: 160px;
             box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
             z-index: 1;
@@ -79,7 +78,7 @@ if (isset($_SESSION['nip']) && isset($koneksi)) {
         }
 
         .mycare-dropdown-content a:hover {
-            background-color: #29487d; 
+            background-color: #3a5795;
         }
 
         .mycare-dropdown:hover .mycare-dropdown-content {
@@ -90,8 +89,6 @@ if (isset($_SESSION['nip']) && isset($koneksi)) {
             margin-left: 250px;
             padding: 20px;
             transition: margin-left 0.3s;
-            width: calc(100% - 250px);
-            float: right;
         }
 
         @media (max-width: 768px) {
@@ -101,7 +98,6 @@ if (isset($_SESSION['nip']) && isset($koneksi)) {
 
             .mycare-content {
                 margin-left: 0;
-                width: 100%;
             }
         }
     </style>

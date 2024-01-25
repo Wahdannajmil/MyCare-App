@@ -5,7 +5,6 @@ if (!isset($_SESSION)) {
     session_start();
 }
 if (!isset($_SESSION['username'])) {
-    // Jika pengguna sudah login, tampilkan tombol "Logout"
     header("Location: index.php?page=loginAdmin");
     exit;
 }
@@ -117,14 +116,6 @@ if (isset($_GET['aksi'])) {
                     value="<?php echo $no_hp ?>">
             </div>
         </div>
-        <!-- <div class="row mt-1">
-            <label for="inputNorm" class="form-label fw-bold">
-                No. RM
-            </label>
-            <div>
-                <input type="text" class="form-control" name="no_rm" id="inputNorm" placeholder="No. RM" value="<?php echo $no_rm ?>">
-            </div>
-        </div> -->
         <div class="row mt-3">
             <div class=col>
                 <button type="submit" class="btn btn-primary rounded-pill px-3 mt-auto" name="simpan">Simpan</button>

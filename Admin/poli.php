@@ -61,8 +61,8 @@ if (isset($_GET['aksi'])) {
             $ambil = mysqli_query($mysqli, "SELECT * FROM poli 
                     WHERE id='" . $_GET['id'] . "'");
             while ($row = mysqli_fetch_array($ambil)) {
-                $nama_obat = $row['nama_obat'];
-                $kemasan = $row['kemasan'];
+                $nama_poli = $row['nama_poli'];
+                $keterangan = $row['keterangan'];
             }
             ?>
             <input type="hidden" name="id" value="<?php echo $_GET['id'] ?>">
@@ -79,7 +79,7 @@ if (isset($_GET['aksi'])) {
             </div>
         </div>
         <div class="row mt-1">
-            <label for="inputKemasan" class="form-label fw-bold">
+            <label for="inputketerangan" class="form-label fw-bold">
                 Keterangan
             </label>
             <div>

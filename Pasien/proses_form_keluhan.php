@@ -3,11 +3,15 @@ session_start();
 
 include_once("../koneksi.php");
 
+// Inisialisasi variabel $id_pasien dan $namaDokter
 $id_pasien = $namaDokter = $no_antrian = "";
 
+// Periksa apakah parameter id_pasien ada dalam URL
 if (isset($_GET['id_pasien'])) {
     $_SESSION['id_pasien'] = $_GET['id_pasien'];
 }
+
+// Periksa apakah parameter id_jadwal ada dalam URL
 if (isset($_GET['id_jadwal'])) {
     $_SESSION['id_jadwal'] = $_GET['id_jadwal'];
 }
@@ -15,12 +19,14 @@ if (isset($_GET['id_jadwal'])) {
 if (isset($_SESSION['id_pasien'])) {
 
 } else {
+    // Variabel $_SESSION['id_pasien'] belum tersimpan
     echo "id_pasien belum tersimpan";
 }
 
 if (isset($_SESSION['id_jadwal'])) {
 
 } else {
+    // Variabel $_SESSION['id_jadwal'] belum tersimpan
     echo "id_jadwal belum tersimpan";
 }
 
@@ -32,6 +38,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_keluhan'])) {
         $id_jadwal = $_SESSION['id_jadwal'];
         $keluhan = $_POST['keluhan'];
 
+        // Validasi nilai id_pasien dan id_jadwal
         $queryCheckPasien = "SELECT id FROM pasien WHERE id = ?";
         $stmtCheckPasien = $mysqli->prepare($queryCheckPasien);
         if ($stmtCheckPasien === false) {
@@ -53,6 +60,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_keluhan'])) {
         $resultCheckJadwal = $stmtCheckJadwal->get_result();
 
         if ($resultCheckPasien->num_rows > 0 && $resultCheckJadwal->num_rows > 0) {
+            // Query untuk mendapatkan jumlah antrian pada hari tersebut
             $queryAntrian = "SELECT COUNT(*) AS total_antrian FROM daftar_poli WHERE id_jadwal = ?";
             $stmtAntrian = $mysqli->prepare($queryAntrian);
             if ($stmtAntrian === false) {
@@ -65,11 +73,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_keluhan'])) {
 
             if ($resultAntrian->num_rows > 0) {
                 $rowAntrian = $resultAntrian->fetch_assoc();
-                $no_antrian = $rowAntrian['total_antrian'] + 1; 
+                $no_antrian = $rowAntrian['total_antrian'] + 1; // Nomor antrian baru
             } else {
-                $no_antrian = 1; 
+                $no_antrian = 1; // Jika tidak ada antrian, nomor antrian dimulai dari 1
             }
 
+            // Query untuk menyimpan informasi ke dalam tabel daftar_poli beserta nomor antrian
             $query = "INSERT INTO daftar_poli (id_pasien, id_jadwal, keluhan, no_antrian) VALUES (?, ?, ?, ?)";
             $stmt = $mysqli->prepare($query);
             if ($stmt === false) {
@@ -79,9 +88,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_keluhan'])) {
             $stmt->bind_param("iisi", $id_pasien, $id_jadwal, $keluhan, $no_antrian);
             if ($stmt->execute()) {
                 echo '<script>alert("Keluhan telah disimpan. Nomor Antrian Anda: ' . $no_antrian . '");</script>';
+                echo '<script>window.location.href = "index.php";</script>';
+                exit();
             } else {
                 echo '<script>alert("Terjadi kesalahan: ' . $stmt->error . '");</script>';
             }
+            
             
         } else {
             echo "ID Pasien atau ID Jadwal tidak valid.";
@@ -93,6 +105,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_keluhan'])) {
     if (isset($_SESSION['id_pasien'])) {
         $id_pasien = $_SESSION['id_pasien'];
 
+        // Query untuk mendapatkan nama dokter
         $queryDokter = "SELECT nama_dokter FROM dokter WHERE id = ?";
         $stmtDokter = $mysqli->prepare($queryDokter);
         if ($stmtDokter === false) {
@@ -105,7 +118,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_keluhan'])) {
 
         if ($resultDokter->num_rows > 0) {
             $rowDokter = $resultDokter->fetch_assoc();
-            $namaDokter = $rowDokter['nama_dokter']; 
+            $namaDokter = $rowDokter['nama_dokter']; // Simpan nama dokter dalam variabel
         } else {
             $namaDokter = 'Nama Dokter Tidak Tersedia';
         }
@@ -258,7 +271,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_keluhan'])) {
                 <label for="keluhan" class="form-label">Keluhan anda</label>
                 <textarea class="form-control" id="keluhan" name="keluhan" rows="3" required></textarea>
             </div>
-            <button type="submit" class="btn btn-primary" href="index.php" submit_keluhan">Submit</button>
+            <button type="submit" class="btn btn-primary" name="submit_keluhan">Submit</button>
+            <button class="btn btn-dark" onclick="window.location.href='daftar_poli.php'">Kembali</button>
         </form>
     </div>
 
