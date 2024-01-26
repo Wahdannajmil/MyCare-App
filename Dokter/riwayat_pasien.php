@@ -120,15 +120,15 @@ if (isset($_GET['id_pasien'])) {
                     <?php
                     if (isset($_SESSION['nip'])) {
                         ?>
-                                    <div class="mycare-dropdown">
-                <a href="../index.php"><i class="fas fa-bars"></i> Menu</a>
-                <div class="mycare-dropdown-content">
-                                    <a class="dropdown-item" href="ubah_profil.php?page=ubah_profil">Ubah Profil Dokter</a>
-                                    <a class="dropdown-item" href="atur_jadwal.php?page=atur_jadwal">Atur jadwal poli</a>
-                                    <a class="dropdown-item" href="jadwal_periksa.php?page=antrean_pasien">Jadwal Saya</a>
-                                    <a class="dropdown-item" href="riwayat_pasien.php?page=riwayat_pasien">Cari Riwayat Pasien</a>                                                </div>
-            </div>
-                        <?php
+                        <div class="mycare-dropdown">
+                            <a href="../index.php"><i class="fas fa-bars"></i> Menu</a>
+                            <div class="mycare-dropdown-content">
+                            <a class="dropdown-item" href="ubah_profil.php?page=ubah_profil">Ubah Profil Dokter</a>
+                            <a class="dropdown-item" href="atur_jadwal.php?page=atur_jadwal">Atur jadwal poli</a>
+                            <a class="dropdown-item" href="jadwal_periksa.php?page=antrean_pasien">Jadwal Saya</a>
+                            <a class="dropdown-item" href="riwayat_pasien.php?page=riwayat_pasien">Cari Riwayat Pasien</a>                                                </div>
+                        </div>
+                    <?php
                     }
                     ?>
                 </ul>

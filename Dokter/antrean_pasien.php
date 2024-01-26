@@ -23,6 +23,23 @@ if (isset($_SESSION['nip'])) {
     }
 }
 
+// Aksi Hapus
+if (isset($_GET['action']) && $_GET['action'] == 'hapus' && isset($_GET['id'])) {
+    $id_antrean_hapus = $_GET['id'];
+
+    // Hapus antrean
+    $query_hapus_antrean = "DELETE FROM daftar_poli WHERE id = $id_antrean_hapus";
+    $result_hapus_antrean = $mysqli->query($query_hapus_antrean);
+
+    if (!$result_hapus_antrean) {
+        die("Query error: " . $mysqli->error);
+    }
+
+    // Redirect kembali ke halaman daftar_poli
+    header("Location: daftar_poli.php");
+    exit();
+}
+
 $query_daftar_pasien = "SELECT dp.id, p.nama_pasien, dp.keluhan, dp.no_antrian, dp.status_periksa
                         FROM daftar_poli dp 
                         JOIN pasien p ON dp.id_pasien = p.id 
@@ -170,7 +187,7 @@ if (!$result_daftar_pasien) {
             </div>
         </div>
     </nav>
-    <div class="container mt-4">
+<div class="container mt-4">
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card">
@@ -190,7 +207,6 @@ if (!$result_daftar_pasien) {
                             echo '</tr>';
                             echo '</thead>';
                             echo '<tbody>';
-
                             while ($row_daftar_pasien = $result_daftar_pasien->fetch_assoc()) {
                                 echo '<tr>';
                                 echo '<td>' . $row_daftar_pasien['nama_pasien'] . '</td>';
@@ -206,12 +222,11 @@ if (!$result_daftar_pasien) {
 
                                 echo '<td>';
                                 if ($result_cek_periksa->num_rows > 0) {
-                                    echo "<a href='edit_periksa.php?id=" . $row_daftar_pasien['id'] . "&nama_pasien=" . $row_daftar_pasien['nama_pasien'] . "&keluhan=" . $row_daftar_pasien['keluhan'] . "&no_antrian=" . $row_daftar_pasien['no_antrian'] . "' class='btn btn-warning'>Edit</a>";
+                                    echo "<a href='edit_periksa.php?id=" . $row_daftar_pasien['id'] . "&nama_pasien=" . $row_daftar_pasien['nama_pasien'] . "&keluhan=" . $row_daftar_pasien['keluhan'] . "&no_antrian=" . $row_daftar_pasien['no_antrian'] . "' class='btn btn-warning ml-2'>Edit</a>";
                                     echo "<button class='btn btn-primary' disabled>Periksa Pasien</button>";
-
                                 } else {
-                                    echo "<button class='btn btn-warning' disabled>Edit</button>";
-                                    echo "<a href='periksa_pasien.php?id=" . $row_daftar_pasien['id'] . "&nama_pasien=" . $row_daftar_pasien['nama_pasien'] . "&keluhan=" . $row_daftar_pasien['keluhan'] . "&no_antrian=" . $row_daftar_pasien['no_antrian'] . "' class='btn btn-primary'>Periksa Pasien</a>";
+                                    echo "<a href='periksa_pasien.php?id=" . $row_daftar_pasien['id'] . "&nama_pasien=" . $row_daftar_pasien['nama_pasien'] . "&keluhan=" . $row_daftar_pasien['keluhan'] . "&no_antrian=" . $row_daftar_pasien['no_antrian'] . "' class='btn btn-primary mr-2'>Periksa Pasien</a>";
+                                    // echo "<a href='daftar_poli.php?action=hapus&id=" . $row_daftar_pasien['id'] . "' class='btn btn-danger ms-2'>Hapus</a>";
                                 }
                                 echo '</td>';
                                 echo '</tr>';
